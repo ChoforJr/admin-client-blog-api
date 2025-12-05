@@ -1,5 +1,5 @@
-import App from "./App";
-import Profile from "./Profile";
+import App from "./App Components/App";
+import HomePage from "./HomePage Components/HomePage";
 import ErrorPage from "./ErrorPage";
 
 const routes = [
@@ -8,10 +8,12 @@ const routes = [
     element: <App />,
     // This is a catch-all for errors that occur within the <App /> component or its children.
     errorElement: <ErrorPage />,
-  },
-  {
-    path: "profile/:name?",
-    element: <Profile />,
+    children: [
+      {
+        index: true,
+        element: <HomePage />,
+      },
+    ],
   },
 ];
 

@@ -1,0 +1,39 @@
+import "./App.css";
+
+import { Link } from "react-router-dom";
+import { Outlet } from "react-router-dom";
+
+const App = () => {
+  return (
+    <div className="container">
+      <nav>
+        <h1>
+          <Link to="/">Chofor's Blog</Link>
+        </h1>
+        <section>
+          <Link to="/">Home</Link>
+          <Link to="/posts">Posts</Link>
+          <Link to="/signIn">Sign In</Link>
+          <Link to="/account">Account</Link>
+          <Link to="/users">Users</Link>
+        </section>
+      </nav>
+      <>
+        <main>
+          <Outlet />
+        </main>
+      </>
+      <footer>
+        Made by{" "}
+        <a
+          href="https://github.com/ChoforJr/admin-client-blog-api"
+          target="_blank"
+        >
+          Chofor Forsakang
+        </a>
+      </footer>
+    </div>
+  );
+};
+
+export default App;
