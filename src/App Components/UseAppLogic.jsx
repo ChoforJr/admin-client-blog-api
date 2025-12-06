@@ -1,5 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+const apiUrl = import.meta.env.VITE_BLOG_API_URL;
+console.log(apiUrl);
 
 export function useAppLogic() {
   const { name } = useParams();

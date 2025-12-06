@@ -1,5 +1,9 @@
 import App from "./App Components/App";
 import HomePage from "./HomePage Components/HomePage";
+import Posts from "./Posts Components/Posts";
+import SignIn from "./SignIn Components/SignIn";
+import Account from "./Account Components/Account";
+import Users from "./Users Components/Users";
 import ErrorPage from "./ErrorPage";
 
 const routes = [
@@ -13,6 +17,10 @@ const routes = [
         index: true,
         element: <HomePage />,
       },
+      { path: "posts", element: <Posts /> },
+      { path: "signIn", element: <SignIn /> },
+      { path: "account", element: <Account /> },
+      { path: "users", element: <Users /> },
     ],
   },
 ];
