@@ -1,143 +1,137 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 const apiUrl = import.meta.env.VITE_BLOG_API_URL;
-console.log(apiUrl);
 
 export function useAppLogic() {
   const { name } = useParams();
-  const [items, setItems] = useState(null);
-  const [totalOrders, setTotalOrders] = useState(0);
-  const [totalPrice, setTotalPrice] = useState(0);
+  const [auth, setAuth] = useState(false);
+  const [posts, setPosts] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [account, setAccount] = useState([]);
+  const [currentComments, setCurrentComments] = useState([]);
 
   useEffect(() => {
-    const fetchItems = async () => {
+    const authToken = localStorage.getItem("authorization");
+    async function getPosts() {
       try {
-        const response = await fetch("https://fakestoreapi.com/products", {
-          mode: "cors",
+        const response = await fetch(`${apiUrl}/post`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
         });
         if (!response.ok) {
           throw new Error(`Response status: ${response.status}`);
         }
 
         const result = await response.json();
-        const neededItems = result.map((item) => {
+        const neededItems = result.publishedPosts.map((item) => {
           return {
             id: item.id,
             title: item.title,
-            price: item.price,
-            image: item.image,
-            orders: item.orders ? item.orders : 0,
+            content: item.content,
+            published: item.published,
+            createdAt: item.createdAt,
+            userId: item.userId,
+            publishedAt: item.publishedAt,
           };
         });
-
-        setItems(neededItems);
+        setPosts(neededItems);
       } catch (error) {
-        console.error("Error:", error);
+        console.error("Network error:", error);
       }
-    };
+    }
+    getPosts();
 
-    fetchItems();
+    if (authToken) {
+      async function getUsers() {
+        try {
+          const response = await fetch(`${apiUrl}/admin/users`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              authorization: `${authToken}`,
+            },
+          });
+          if (!response.ok) {
+            if (response.status == 401) {
+              setUsers([]);
+              setAuth(false);
+              localStorage.removeItem("authorization");
+            }
+            throw new Error(`Response status: ${response.status}`);
+          }
+
+          const result = await response.json();
+          const neededItems = result.users.map((item) => {
+            return {
+              id: item.id,
+              username: item.username,
+              createdAt: item.createdAt,
+              role: item.role,
+              displayName: item.profile.displayName,
+              bio: item.profile.bio,
+            };
+          });
+
+          setUsers(neededItems);
+          setAuth(true);
+        } catch (error) {
+          console.error("Network error:", error);
+        }
+      }
+      getUsers();
+    }
   }, []);
 
   useEffect(() => {
-    if (!items) return;
-
-    setTotalOrders(() => {
-      const sum = items.reduce((total, item) => {
-        return total + item.orders;
-      }, 0);
-      return sum;
-    });
-
-    setTotalPrice(() => {
-      const price = Number(
-        items
-          .reduce((total, item) => {
-            const product = item.price * item.orders;
-            return total + product;
-          }, 0)
-          .toFixed(2)
-      );
-      return price;
-    });
-  }, [items]);
-
-  function increaseOrDecrease(id, change) {
-    setItems((prevItems) => {
-      const updatedItems = prevItems.map((item) => {
-        let newOrders;
-        if (item.id == id) {
-          if (change == "+") {
-            newOrders = item.orders + 1;
-          } else if (change == "-") {
-            newOrders = item.orders - 1;
-          } else {
-            newOrders = 0;
+    const authToken = localStorage.getItem("authorization");
+    if (authToken && auth) {
+      async function getAccountInfo() {
+        try {
+          const response = await fetch(`${apiUrl}/admin/profile`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              authorization: `${authToken}`,
+            },
+          });
+          if (!response.ok) {
+            if (response.status == 401) {
+              setAccount([]);
+              setAuth(false);
+              localStorage.removeItem("authorization");
+            }
+            throw new Error(`Response status: ${response.status}`);
           }
-          return {
-            ...item,
-            orders: newOrders,
+
+          const result = await response.json();
+          const neededItems = {
+            id: result.adminInfo.id,
+            username: result.adminInfo.username,
+            createdAt: result.adminInfo.createdAt,
+            role: result.adminInfo.role,
+            displayName: result.adminInfo.profile.displayName,
+            bio: result.adminInfo.profile.bio,
           };
+
+          setAccount(neededItems);
+        } catch (error) {
+          console.error("Network error:", error);
         }
-        return item;
-      });
-      return updatedItems;
-    });
-  }
-
-  function increaseOrders(id) {
-    const firstChar = parseInt(id, 10);
-    increaseOrDecrease(firstChar, "+");
-  }
-
-  function decreaseOrders(id) {
-    const firstChar = parseInt(id, 10);
-    increaseOrDecrease(firstChar, "-");
-  }
-
-  function onChangeInput(event, id) {
-    const { value } = event.target;
-    const firstChar = parseInt(id, 10);
-
-    setItems((prevItems) => {
-      const updatedItems = prevItems.map((item) => {
-        if (item.id == firstChar) {
-          return {
-            ...item,
-            orders: Number(value),
-          };
-        }
-        return item;
-      });
-      return updatedItems;
-    });
-  }
-
-  function removeOrders(id) {
-    const firstChar = parseInt(id, 10);
-    increaseOrDecrease(firstChar, "R");
-  }
-
-  function clearOrders() {
-    setItems((prevItems) => {
-      const updatedItems = prevItems.map((item) => {
-        return {
-          ...item,
-          orders: 0,
-        };
-      });
-      return updatedItems;
-    });
-  }
+      }
+      getAccountInfo();
+    }
+  }, [auth]);
+  console.log(posts);
   return {
     name,
-    items,
-    totalOrders,
-    totalPrice,
-    increaseOrders,
-    decreaseOrders,
-    onChangeInput,
-    removeOrders,
-    clearOrders,
+    auth,
+    setAuth,
+    posts,
+    currentComments,
+    setCurrentComments,
+    users,
+    account,
   };
 }

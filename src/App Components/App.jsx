@@ -2,10 +2,20 @@ import "./App.css";
 
 import { Link } from "react-router-dom";
 import { Outlet } from "react-router-dom";
-// import { ItemContext } from "../ItemContext";
-// import { useAppLogic } from "./UseAppLogic";
+import { ItemContext } from "../ItemContext";
+import { useAppLogic } from "./UseAppLogic";
 
 const App = () => {
+  const { name, auth, setAuth, posts, users, account } = useAppLogic();
+
+  const value = {
+    name,
+    auth,
+    setAuth,
+    posts,
+    users,
+    account,
+  };
   return (
     <div className="container">
       <nav>
@@ -22,7 +32,9 @@ const App = () => {
       </nav>
       <>
         <main>
-          <Outlet />
+          <ItemContext.Provider value={value}>
+            <Outlet />
+          </ItemContext.Provider>
         </main>
       </>
       <footer>
