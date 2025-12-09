@@ -22,7 +22,7 @@ const Users = () => {
         <h1>
           LogIn To
           <br />
-          See Account Info
+          See Users Info
         </h1>
       )}
     </div>

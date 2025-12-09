@@ -1,6 +1,8 @@
 import styles from "./signIn.module.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ItemContext } from "../ItemContext";
+import { useContext } from "react";
 const apiUrl = import.meta.env.VITE_BLOG_API_URL;
 
 const SignIn = () => {
@@ -8,6 +10,7 @@ const SignIn = () => {
     username: "",
     password: "",
   });
+  const { setAuth } = useContext(ItemContext);
 
   function onChangeHandler(event) {
     const { name, value } = event.target;
@@ -38,6 +41,7 @@ const SignIn = () => {
         const data = await response.json();
         localStorage.removeItem("authorization");
         localStorage.setItem("authorization", `Bearer ${data.token}`);
+        setAuth(true);
         navigate("/account", { replace: true });
       } else {
         alert("Login failed. Please check your credentials.");
