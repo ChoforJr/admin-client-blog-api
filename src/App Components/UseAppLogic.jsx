@@ -12,37 +12,6 @@ export function useAppLogic() {
 
   useEffect(() => {
     const authToken = localStorage.getItem("authorization");
-    async function getPosts() {
-      try {
-        const response = await fetch(`${apiUrl}/post`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        if (!response.ok) {
-          throw new Error(`Response status: ${response.status}`);
-        }
-
-        const result = await response.json();
-        const neededItems = result.publishedPosts.map((item) => {
-          return {
-            id: item.id,
-            title: item.title,
-            content: item.content,
-            published: item.published,
-            createdAt: item.createdAt,
-            userId: item.userId,
-            publishedAt: item.publishedAt,
-          };
-        });
-        setPosts(neededItems);
-      } catch (error) {
-        console.error("Network error:", error);
-      }
-    }
-    getPosts();
-
     if (authToken) {
       async function getUsers() {
         try {
@@ -81,6 +50,37 @@ export function useAppLogic() {
         }
       }
       getUsers();
+      async function getPosts() {
+        try {
+          const response = await fetch(`${apiUrl}/admin/post/all`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              authorization: `${authToken}`,
+            },
+          });
+          if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+          }
+
+          const result = await response.json();
+          const neededItems = result.posts.map((item) => {
+            return {
+              id: item.id,
+              title: item.title,
+              content: item.content,
+              published: item.published,
+              createdAt: item.createdAt,
+              userId: item.userId,
+              publishedAt: item.publishedAt,
+            };
+          });
+          setPosts(neededItems);
+        } catch (error) {
+          console.error("Network error:", error);
+        }
+      }
+      getPosts();
     }
   }, []);
 
