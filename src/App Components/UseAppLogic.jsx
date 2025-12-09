@@ -8,10 +8,41 @@ export function useAppLogic() {
   const [posts, setPosts] = useState([]);
   const [users, setUsers] = useState([]);
   const [account, setAccount] = useState([]);
-  const [currentComments, setCurrentComments] = useState([]);
+  const [comments, setComments] = useState([]);
 
   useEffect(() => {
     const authToken = localStorage.getItem("authorization");
+
+    async function getComments() {
+      try {
+        const response = await fetch(`${apiUrl}/comments`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (!response.ok) {
+          throw new Error(`Response status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        const neededItems = result.comments.map((item) => {
+          return {
+            id: item.id,
+            content: item.content,
+            userId: item.userId,
+            postId: item.postId,
+            parentId: item.parentId,
+            createdAt: item.createdAt,
+          };
+        });
+        setComments(neededItems);
+      } catch (error) {
+        console.error("Network error:", error);
+      }
+    }
+    getComments();
+
     if (authToken) {
       async function getUsers() {
         try {
@@ -50,6 +81,7 @@ export function useAppLogic() {
         }
       }
       getUsers();
+
       async function getPosts() {
         try {
           const response = await fetch(`${apiUrl}/admin/post/all`, {
@@ -123,14 +155,12 @@ export function useAppLogic() {
       getAccountInfo();
     }
   }, [auth]);
-  console.log(posts);
   return {
     name,
     auth,
     setAuth,
     posts,
-    currentComments,
-    setCurrentComments,
+    comments,
     users,
     account,
   };
