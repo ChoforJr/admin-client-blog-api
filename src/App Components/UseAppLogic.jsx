@@ -29,6 +29,7 @@ export function useAppLogic() {
         const neededItems = result.comments.map((item) => {
           return {
             id: item.id,
+            keyID: crypto.randomUUID(),
             content: item.content,
             userId: item.userId,
             postId: item.postId,
@@ -66,11 +67,12 @@ export function useAppLogic() {
           const neededItems = result.users.map((item) => {
             return {
               id: item.id,
+              keyID: crypto.randomUUID(),
               username: item.username,
               createdAt: item.createdAt,
               role: item.role,
               displayName: item.profile.displayName,
-              bio: item.profile.bio,
+              bio: item.profile.bio ? item.profile.bio : "None",
             };
           });
 
@@ -99,6 +101,7 @@ export function useAppLogic() {
           const neededItems = result.posts.map((item) => {
             return {
               id: item.id,
+              keyID: crypto.randomUUID(),
               title: item.title,
               content: item.content,
               published: item.published,
@@ -140,6 +143,7 @@ export function useAppLogic() {
           const result = await response.json();
           const neededItems = {
             id: result.adminInfo.id,
+            keyID: crypto.randomUUID(),
             username: result.adminInfo.username,
             createdAt: result.adminInfo.createdAt,
             role: result.adminInfo.role,

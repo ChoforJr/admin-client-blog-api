@@ -36,6 +36,7 @@ const SignIn = () => {
 
       if (response.ok) {
         const data = await response.json();
+        localStorage.removeItem("authorization");
         localStorage.setItem("authorization", `Bearer ${data.token}`);
         navigate("/account", { replace: true });
       } else {

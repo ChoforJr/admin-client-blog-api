@@ -6,13 +6,15 @@ import { ItemContext } from "../ItemContext";
 import { useAppLogic } from "./UseAppLogic";
 
 const App = () => {
-  const { name, auth, setAuth, posts, users, account } = useAppLogic();
+  const { name, auth, setAuth, posts, comments, users, account } =
+    useAppLogic();
 
   const value = {
     name,
     auth,
     setAuth,
     posts,
+    comments,
     users,
     account,
   };

@@ -7,7 +7,7 @@ const Account = () => {
   return (
     <div className={styles.account}>
       {auth ? (
-        <div className="accountInfo">
+        <div key={account.keyID} className="accountInfo">
           <h1>ID: {account.id}</h1>
           <h1>Username: {account.username}</h1>
           <h1>Display Name: {account.displayName}</h1>
