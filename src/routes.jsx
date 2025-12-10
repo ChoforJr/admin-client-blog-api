@@ -1,6 +1,7 @@
 import App from "./App Components/App";
 import HomePage from "./HomePage Components/HomePage";
 import Posts from "./Posts Components/Posts";
+import Post from "./Post Components/Post";
 import SignIn from "./SignIn Components/SignIn";
 import Account from "./Account Components/Account";
 import Users from "./Users Components/Users";
@@ -18,6 +19,7 @@ const routes = [
         element: <HomePage />,
       },
       { path: "posts", element: <Posts /> },
+      { path: "posts/:id", element: <Post /> },
       { path: "signIn", element: <SignIn /> },
       { path: "account", element: <Account /> },
       { path: "users", element: <Users /> },

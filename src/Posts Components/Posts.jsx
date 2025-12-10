@@ -10,29 +10,38 @@ const Posts = () => {
     <div className={styles.posts}>
       {auth ? (
         posts.map((item) => (
-          <article key={item.keyID} className={styles.postArticle}>
-            <h2>
-              {item.title}{" "}
-              <div>
-                <button className={styles.postDelBtn}>Delete</button>{" "}
-                <button className={styles.postEdtBtn}>edit</button>
-              </div>
-            </h2>
-            <p className={styles.content}>{item.content}</p>
-            <p>Created On: {item.createdAt}</p>
-            <p>
-              Comments:{" "}
-              {comments.filter((comment) => comment.postId === item.id).length}
-            </p>
-            {item.published ? (
-              <p style={{ color: "#ADFF2F" }}>
-                {" "}
-                Published On: {item.publishedAt}
+          <Link
+            to={{
+              pathname: `/posts/${item.id}`,
+            }}
+          >
+            <article key={item.keyID} className={styles.postArticle}>
+              <h2>
+                {item.title}{" "}
+                <div>
+                  <button className={styles.postDelBtn}>Delete</button>{" "}
+                  <button className={styles.postEdtBtn}>edit</button>
+                </div>
+              </h2>
+              <p className={styles.content}>{item.content}</p>
+              <p>Created On: {new Date(item.createdAt).toLocaleString()}</p>
+              <p>
+                Comments:{" "}
+                {
+                  comments.filter((comment) => comment.postId === item.id)
+                    .length
+                }
               </p>
-            ) : (
-              <p style={{ color: "#DC143C" }}>Drafted</p>
-            )}
-          </article>
+              {item.published ? (
+                <p style={{ color: "#ADFF2F" }}>
+                  {" "}
+                  Published On: {new Date(item.publishedAt).toLocaleString()}
+                </p>
+              ) : (
+                <p style={{ color: "#DC143C" }}>Drafted</p>
+              )}
+            </article>
+          </Link>
         ))
       ) : (
         <h1>

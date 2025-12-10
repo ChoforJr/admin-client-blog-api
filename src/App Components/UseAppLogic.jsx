@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 const apiUrl = import.meta.env.VITE_BLOG_API_URL;
 
 export function useAppLogic() {
-  const { name } = useParams();
+  const { id } = useParams();
   const [auth, setAuth] = useState(false);
   const [posts, setPosts] = useState([]);
   const [users, setUsers] = useState([]);
@@ -160,7 +160,7 @@ export function useAppLogic() {
     }
   }, [auth]);
   return {
-    name,
+    id,
     auth,
     setAuth,
     posts,
