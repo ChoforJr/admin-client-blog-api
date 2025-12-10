@@ -159,12 +159,24 @@ export function useAppLogic() {
       getAccountInfo();
     }
   }, [auth]);
+  function addPost(newPost) {
+    setPosts((prevPosts) => {
+      return [...prevPosts, newPost];
+    });
+  }
+  function addComment(newComment) {
+    setComments((prevComments) => {
+      return [...prevComments, newComment];
+    });
+  }
   return {
     id,
     auth,
     setAuth,
     posts,
+    addPost,
     comments,
+    addComment,
     users,
     account,
   };

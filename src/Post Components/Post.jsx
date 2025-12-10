@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import styles from "./post.module.css";
 import { ItemContext } from "../ItemContext";
 import { useContext } from "react";

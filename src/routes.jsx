@@ -2,6 +2,7 @@ import App from "./App Components/App";
 import HomePage from "./HomePage Components/HomePage";
 import Posts from "./Posts Components/Posts";
 import Post from "./Post Components/Post";
+import CreatePost from "./Create Post Components/CreatePost";
 import SignIn from "./SignIn Components/SignIn";
 import Account from "./Account Components/Account";
 import Users from "./Users Components/Users";
@@ -20,6 +21,7 @@ const routes = [
       },
       { path: "posts", element: <Posts /> },
       { path: "posts/:id", element: <Post /> },
+      { path: "createPost", element: <CreatePost /> },
       { path: "signIn", element: <SignIn /> },
       { path: "account", element: <Account /> },
       { path: "users", element: <Users /> },

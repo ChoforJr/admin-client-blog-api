@@ -11,9 +11,9 @@ const App = () => {
     auth,
     setAuth,
     posts,
-    currentPost,
-    setCurrentPost,
+    addPost,
     comments,
+    addComment,
     users,
     account,
   } = useAppLogic();
@@ -23,9 +23,9 @@ const App = () => {
     auth,
     setAuth,
     posts,
-    currentPost,
-    setCurrentPost,
+    addPost,
     comments,
+    addComment,
     users,
     account,
   };

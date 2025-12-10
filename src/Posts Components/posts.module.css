@@ -7,6 +7,7 @@
 }
 
 .postArticle {
+  color: #e6e6fa;
   text-align: left;
   border: 0.1rem #556b2f solid;
   background-color: #556b2f;
@@ -17,22 +18,18 @@
 }
 
 .postArticle h2 {
-  color: #33006f;
   display: flex;
   justify-content: space-between;
 }
 
 .content {
   overflow: hidden;
+  white-space: nowrap;
   text-overflow: ellipsis;
-  display: -webkit-box;
-  line-clamp: 3;
-  -webkit-box-orient: vertical;
 }
 
 .postDelBtn {
   background-color: #dc143c;
-  color: #317873;
 }
 .postDelBtn:hover {
   background-color: #ff0000;
@@ -40,7 +37,6 @@
 
 .postEdtBtn {
   background-color: #febe10;
-  color: #317873;
 }
 .postEdtBtn:hover {
   background-color: #ffff00;
