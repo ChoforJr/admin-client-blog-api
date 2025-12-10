@@ -4,7 +4,7 @@ import { ItemContext } from "../ItemContext";
 import { useContext } from "react";
 
 const Post = () => {
-  const { auth, comments, id, posts, users } = useContext(ItemContext);
+  const { auth, comments, id, posts, users, account } = useContext(ItemContext);
   const currentPost = posts.filter((post) => post.id == id);
   const currentComment = comments.filter((comment) => comment.postId == id);
   return (
@@ -44,7 +44,9 @@ const Post = () => {
                     <p>{comment.content}</p>
                     <div>
                       <button className={styles.commentDelBtn}>Delete</button>{" "}
-                      <button className={styles.commentEdtBtn}>edit</button>
+                      {account.id == comment.userId && (
+                        <button className={styles.commentEdtBtn}>edit</button>
+                      )}
                     </div>
                   </div>
                 )
