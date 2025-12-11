@@ -9,6 +9,7 @@ export function useAppLogic() {
   const [users, setUsers] = useState([]);
   const [account, setAccount] = useState([]);
   const [comments, setComments] = useState([]);
+  const [profiles, setProfiles] = useState([]);
 
   useEffect(() => {
     const authToken = localStorage.getItem("authorization");
@@ -33,7 +34,6 @@ export function useAppLogic() {
             content: item.content,
             userId: item.userId,
             postId: item.postId,
-            parentId: item.parentId,
             createdAt: item.createdAt,
           };
         });
@@ -43,6 +43,36 @@ export function useAppLogic() {
       }
     }
     getComments();
+
+    async function getProfiles() {
+      try {
+        const response = await fetch(`${apiUrl}/profiles`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (!response.ok) {
+          throw new Error(`Response status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        const neededItems = result.profiles.map((item) => {
+          return {
+            id: item.id,
+            keyID: crypto.randomUUID(),
+            userId: item.userId,
+            displayName: item.displayName,
+            bio: item.bio,
+            createdAt: item.createdAt,
+          };
+        });
+        setProfiles(neededItems);
+      } catch (error) {
+        console.error("Network error:", error);
+      }
+    }
+    getProfiles();
 
     if (authToken) {
       async function getUsers() {
@@ -179,5 +209,6 @@ export function useAppLogic() {
     addComment,
     users,
     account,
+    profiles,
   };
 }

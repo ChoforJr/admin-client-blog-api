@@ -16,6 +16,7 @@ const App = () => {
     addComment,
     users,
     account,
+    profiles,
   } = useAppLogic();
 
   const value = {
@@ -28,6 +29,7 @@ const App = () => {
     addComment,
     users,
     account,
+    profiles,
   };
   return (
     <div className="container">
