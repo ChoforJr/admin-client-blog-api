@@ -189,6 +189,7 @@ export function useAppLogic() {
       getAccountInfo();
     }
   }, [auth]);
+
   function addPost(newPost) {
     setPosts((prevPosts) => {
       return [...prevPosts, newPost];
@@ -198,18 +199,74 @@ export function useAppLogic() {
     setPosts((prevPosts) => {
       const updatedPosts = prevPosts.map((post) => {
         if (post.id == oldPost.id) {
-          return {
-            ...post,
-            title: oldPost.title,
-            content: oldPost.content,
-            published: oldPost.published,
-          };
+          if (post.published == false && oldPost.published == true) {
+            return {
+              ...post,
+              title: oldPost.title,
+              content: oldPost.content,
+              published: oldPost.published,
+              publishedAt: new Date(),
+            };
+          } else {
+            return {
+              ...post,
+              title: oldPost.title,
+              content: oldPost.content,
+              published: oldPost.published,
+            };
+          }
         }
         return post;
       });
       return updatedPosts;
     });
   }
+  async function changePostState(event, id, currentPublished) {
+    event.stopPropagation();
+    try {
+      const authToken = localStorage.getItem("authorization");
+
+      const response = await fetch(`${apiUrl}/admin/post/state/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `${authToken}`,
+        },
+        body: JSON.stringify({
+          published: !currentPublished,
+        }),
+      });
+
+      if (response.ok) {
+        setPosts((prevPosts) => {
+          const updatedPosts = prevPosts.map((post) => {
+            if (post.id == id) {
+              if (post.published == false) {
+                return {
+                  ...post,
+                  published: true,
+                  publishedAt: new Date(),
+                };
+              } else {
+                return {
+                  ...post,
+                  published: false,
+                };
+              }
+            }
+            return post;
+          });
+          return updatedPosts;
+        });
+      } else {
+        const result = await response.json();
+        console.log(result);
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+    }
+  }
+
   function addComment(newComment) {
     setComments((prevComments) => {
       return [...prevComments, newComment];
@@ -222,6 +279,7 @@ export function useAppLogic() {
     posts,
     addPost,
     editPost,
+    changePostState,
     comments,
     addComment,
     users,

@@ -5,7 +5,7 @@ import { ItemContext } from "../ItemContext";
 import { useContext } from "react";
 
 const Posts = () => {
-  const { auth, posts, comments } = useContext(ItemContext);
+  const { auth, posts, comments, changePostState } = useContext(ItemContext);
   const navigate = useNavigate();
   function getPost(event) {
     const { id } = event.currentTarget;
@@ -61,7 +61,9 @@ const Posts = () => {
                 </p>
                 <button
                   style={{ backgroundColor: "#DC143C" }}
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={(event) =>
+                    changePostState(event, item.id, item.published)
+                  }
                 >
                   unpublish
                 </button>
@@ -71,7 +73,9 @@ const Posts = () => {
                 <p style={{ color: "#DC143C" }}>Drafted</p>
                 <button
                   style={{ backgroundColor: "#ADFF2F" }}
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={(event) =>
+                    changePostState(event, item.id, item.published)
+                  }
                 >
                   Publish
                 </button>
