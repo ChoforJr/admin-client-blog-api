@@ -42,7 +42,6 @@ const EditPost = () => {
       published: value,
     }));
   }
-  console.log(editPost.published);
   const handleSubmit = async (e) => {
     e.preventDefault();
 

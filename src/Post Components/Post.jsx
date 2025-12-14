@@ -1,28 +1,58 @@
 import styles from "./post.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ItemContext } from "../ItemContext";
 import { useContext } from "react";
 const apiUrl = import.meta.env.VITE_BLOG_API_URL;
 
 const Post = () => {
   const [commenting, setCommenting] = useState("");
-
-  const { auth, comments, id, posts, account, addComment, profiles } =
-    useContext(ItemContext);
+  const [currentComment, setCurrentComment] = useState([]);
+  const [existingComment, setExistingComment] = useState("");
+  const [existingCommentIds, setExistingCommentIds] = useState(0);
+  const {
+    auth,
+    comments,
+    id,
+    posts,
+    account,
+    addComment,
+    profiles,
+    changeComment,
+  } = useContext(ItemContext);
 
   const currentPost = posts.filter((post) => post.id == id);
-  const currentComment = comments.filter((comment) => comment.postId == id);
+
+  useEffect(() => {
+    const newComments = comments.filter((comment) => comment.postId == id);
+    setCurrentComment(newComments);
+  }, [comments, id]);
 
   function changingComment(event) {
+    event.preventDefault();
     const { value } = event.target;
     setCommenting(value);
   }
 
-  async function subminComment(event) {
+  function changingExistingComment(event) {
+    event.preventDefault();
+    const { value } = event.target;
+    setExistingComment(value);
+  }
+
+  function changeExistingCommentId(commentId) {
+    setExistingCommentIds(commentId);
+  }
+
+  function resetExistingComment() {
+    setExistingCommentIds(0);
+    setExistingComment("");
+  }
+
+  async function submitComment(event) {
     event.preventDefault();
 
     if (commenting == "") {
-      return alert("You can't submin an empty field");
+      return alert("You can't submit an empty field");
     }
 
     try {
@@ -58,6 +88,43 @@ const Post = () => {
       console.error("Network error:", error);
     }
   }
+
+  async function submitEditedComment(event, commentId) {
+    event.preventDefault();
+
+    if (existingComment == "") {
+      return alert("You can't submit an empty field");
+    }
+
+    try {
+      const authToken = localStorage.getItem("authorization");
+
+      const response = await fetch(`${apiUrl}/user/post/comment/${commentId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `${authToken}`,
+        },
+        body: JSON.stringify({
+          content: existingComment,
+        }),
+      });
+
+      if (response.ok) {
+        changeComment({
+          id: commentId,
+          content: existingComment,
+        });
+        resetExistingComment();
+      } else {
+        const result = await response.json();
+        console.error(result);
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+    }
+  }
+
   return (
     <div className={styles.post}>
       {auth ? (
@@ -76,7 +143,7 @@ const Post = () => {
               value={commenting}
               onChange={changingComment}
             />
-            <button onClick={subminComment}>Submit</button>
+            <button onClick={submitComment}>Submit</button>
           </div>
           <article className={styles.comments}>
             <p>Comments</p>
@@ -87,17 +154,47 @@ const Post = () => {
                     {profiles.map(
                       (profile) =>
                         profile.userId == comment.userId && (
-                          <p style={{ color: "GrayText" }}>
+                          <p style={{ color: "GrayText" }} key={profile.keyID}>
                             {profile.displayName} said on{" "}
                             {new Date(comment.createdAt).toLocaleString()}
                           </p>
                         )
                     )}
                     <p>{comment.content}</p>
+                    {existingCommentIds == comment.id && (
+                      <div>
+                        <input
+                          type="text"
+                          name="editingComment"
+                          id="editingComment"
+                          value={existingComment}
+                          onChange={changingExistingComment}
+                        />
+                        <button
+                          className={styles.commentDelBtn}
+                          onClick={resetExistingComment}
+                        >
+                          Cancel
+                        </button>{" "}
+                        <button
+                          style={{ color: "green" }}
+                          onClick={(event) =>
+                            submitEditedComment(event, comment.id)
+                          }
+                        >
+                          Submit
+                        </button>
+                      </div>
+                    )}
                     <div>
                       <button className={styles.commentDelBtn}>Delete</button>{" "}
                       {account.id == comment.userId && (
-                        <button className={styles.commentEdtBtn}>edit</button>
+                        <button
+                          className={styles.commentEdtBtn}
+                          onClick={() => changeExistingCommentId(comment.id)}
+                        >
+                          edit
+                        </button>
                       )}
                     </div>
                   </div>

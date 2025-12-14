@@ -272,6 +272,21 @@ export function useAppLogic() {
       return [...prevComments, newComment];
     });
   }
+  function changeComment(newComment) {
+    setComments((prevComments) => {
+      const updatedComments = prevComments.map((comment) => {
+        if (comment.id == newComment.id) {
+          return {
+            ...comment,
+            content: newComment.content,
+          };
+        }
+        return comment;
+      });
+      return updatedComments;
+    });
+  }
+
   return {
     id,
     auth,
@@ -282,6 +297,7 @@ export function useAppLogic() {
     changePostState,
     comments,
     addComment,
+    changeComment,
     users,
     account,
     profiles,
