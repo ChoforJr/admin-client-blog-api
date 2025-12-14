@@ -194,6 +194,22 @@ export function useAppLogic() {
       return [...prevPosts, newPost];
     });
   }
+  function editPost(oldPost) {
+    setPosts((prevPosts) => {
+      const updatedPosts = prevPosts.map((post) => {
+        if (post.id == oldPost.id) {
+          return {
+            ...post,
+            title: oldPost.title,
+            content: oldPost.content,
+            published: oldPost.published,
+          };
+        }
+        return post;
+      });
+      return updatedPosts;
+    });
+  }
   function addComment(newComment) {
     setComments((prevComments) => {
       return [...prevComments, newComment];
@@ -205,6 +221,7 @@ export function useAppLogic() {
     setAuth,
     posts,
     addPost,
+    editPost,
     comments,
     addComment,
     users,

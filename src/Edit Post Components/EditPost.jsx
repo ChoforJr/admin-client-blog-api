@@ -1,68 +1,77 @@
 import { useNavigate } from "react-router-dom";
-import styles from "./createPost.module.css";
-import { useState } from "react";
+import styles from "./editPost.module.css";
+import { useState, useEffect } from "react";
 import { ItemContext } from "../ItemContext";
 import { useContext } from "react";
 const apiUrl = import.meta.env.VITE_BLOG_API_URL;
 
-const CreatePost = () => {
-  const [newPost, setNewPost] = useState({
-    title: "",
-    content: "",
-    published: true,
-  });
-  const { auth, addPost } = useContext(ItemContext);
+const EditPost = () => {
+  const { auth, posts, id, editPost: changePost } = useContext(ItemContext);
 
+  const [editPost, setEditPost] = useState({});
+  const navigate = useNavigate();
+  useEffect(() => {
+    const currentPost = posts.filter((post) => post.id == id);
+    setEditPost({
+      id: currentPost[0].id,
+      title: currentPost[0].title,
+      content: currentPost[0].content,
+      published: currentPost[0].published,
+    });
+  }, [posts, id]);
+
+  if (!posts || posts.length === 0 || editPost.length === 0) {
+    return (
+      <div className={styles.EditPost}>
+        <h1>Loading post data or post not found...</h1>
+      </div>
+    );
+  }
   function onChangeHandler(event) {
     const { name, value } = event.target;
-    setNewPost((prevPost) => ({
+    setEditPost((prevPost) => ({
       ...prevPost,
       [name]: value,
     }));
   }
+
   function onChangePublish(event) {
     const { value } = event.target;
-    setNewPost((prevPost) => ({
+    setEditPost((prevPost) => ({
       ...prevPost,
       published: value,
     }));
   }
-  const navigate = useNavigate();
-
+  console.log(editPost.published);
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (newPost.title == "" || newPost.content == "") {
+    if (editPost.title == "" || editPost.content == "") {
       return alert("You need to fill in all the field");
     }
 
     try {
       const authToken = localStorage.getItem("authorization");
 
-      const response = await fetch(`${apiUrl}/admin/post`, {
-        method: "POST",
+      const response = await fetch(`${apiUrl}/admin/post/${id}`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
           authorization: `${authToken}`,
         },
         body: JSON.stringify({
-          title: newPost.title,
-          content: newPost.content,
-          published: newPost.published,
+          title: editPost.title,
+          content: editPost.content,
+          published: editPost.published,
         }),
       });
 
       if (response.ok) {
-        const result = await response.json();
-        addPost({
-          id: result.post[0].id,
-          keyID: crypto.randomUUID(),
-          title: result.post[0].title,
-          content: result.post[0].content,
-          published: result.post[0].published,
-          createdAt: result.post[0].createdAt,
-          userId: result.post[0].userId,
-          publishedAt: result.post[0].publishedAt,
+        changePost({
+          id: editPost.id,
+          title: editPost.title,
+          content: editPost.content,
+          published: editPost.published,
         });
         navigate("/posts", { replace: true });
       } else {
@@ -74,9 +83,9 @@ const CreatePost = () => {
     }
   };
   return (
-    <div className={styles.createPost}>
+    <div className={styles.EditPost}>
       {auth ? (
-        <div className={styles.createPostArticle}>
+        <div className={styles.EditPostArticle}>
           <div style={{ display: "inline-block" }}>
             <label htmlFor="publish">
               <input
@@ -105,7 +114,7 @@ const CreatePost = () => {
               type="text"
               name="title"
               id="title"
-              value={newPost.title}
+              value={editPost.title}
               onChange={onChangeHandler}
               style={{ width: "400px" }}
             />
@@ -114,20 +123,20 @@ const CreatePost = () => {
           <textarea
             name="content"
             id="content"
-            value={newPost.content}
+            value={editPost.content}
             onChange={onChangeHandler}
           ></textarea>
-          <button onClick={handleSubmit}>Submit</button>
+          <button onClick={handleSubmit}>Submit changes</button>
         </div>
       ) : (
         <h1>
           LogIn To
           <br />
-          Create A Post
+          Edit Post
         </h1>
       )}
     </div>
   );
 };
 
-export default CreatePost;
+export default EditPost;

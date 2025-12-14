@@ -1,10 +1,16 @@
 import { Link } from "react-router-dom";
 import styles from "./posts.module.css";
+import { useNavigate } from "react-router-dom";
 import { ItemContext } from "../ItemContext";
 import { useContext } from "react";
 
 const Posts = () => {
   const { auth, posts, comments } = useContext(ItemContext);
+  const navigate = useNavigate();
+  function getPost(event) {
+    const { id } = event.currentTarget;
+    navigate(`/posts/${id}`, { replace: false });
+  }
 
   return (
     <div className={styles.posts}>
@@ -16,49 +22,62 @@ const Posts = () => {
 
       {auth ? (
         posts.map((item) => (
-          <Link
+          <article
             key={item.keyID}
-            to={{
-              pathname: `/posts/${item.id}`,
-            }}
+            className={styles.postArticle}
+            id={item.id}
+            onClick={getPost}
           >
-            <article className={styles.postArticle}>
-              <h2>
-                {item.title}{" "}
-                <div>
-                  <button className={styles.postDelBtn}>Delete</button>{" "}
+            <h2>
+              {item.title}{" "}
+              <div>
+                <button
+                  className={styles.postDelBtn}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  Delete
+                </button>{" "}
+                <Link
+                  to={{
+                    pathname: `/editPost/${item.id}`,
+                  }}
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <button className={styles.postEdtBtn}>edit</button>
-                </div>
-              </h2>
-              <p className={styles.content}>{item.content}</p>
-              <p>Created On: {new Date(item.createdAt).toLocaleString()}</p>
-              <p>
-                Comments:{" "}
-                {
-                  comments.filter((comment) => comment.postId === item.id)
-                    .length
-                }
-              </p>
-              {item.published ? (
-                <div>
-                  <p style={{ color: "#ADFF2F" }}>
-                    {" "}
-                    Published On: {new Date(item.publishedAt).toLocaleString()}
-                  </p>
-                  <button style={{ backgroundColor: "#DC143C" }}>
-                    unpublish
-                  </button>
-                </div>
-              ) : (
-                <div>
-                  <p style={{ color: "#DC143C" }}>Drafted</p>
-                  <button style={{ backgroundColor: "#ADFF2F" }}>
-                    Publish
-                  </button>
-                </div>
-              )}
-            </article>
-          </Link>
+                </Link>
+              </div>
+            </h2>
+            <p className={styles.content}>{item.content}</p>
+            <p>Created On: {new Date(item.createdAt).toLocaleString()}</p>
+            <p>
+              Comments:{" "}
+              {comments.filter((comment) => comment.postId === item.id).length}
+            </p>
+            {item.published ? (
+              <div>
+                <p style={{ color: "#ADFF2F" }}>
+                  {" "}
+                  Published On: {new Date(item.publishedAt).toLocaleString()}
+                </p>
+                <button
+                  style={{ backgroundColor: "#DC143C" }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  unpublish
+                </button>
+              </div>
+            ) : (
+              <div>
+                <p style={{ color: "#DC143C" }}>Drafted</p>
+                <button
+                  style={{ backgroundColor: "#ADFF2F" }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  Publish
+                </button>
+              </div>
+            )}
+          </article>
         ))
       ) : (
         <h1>
