@@ -6,4 +6,17 @@
 .accountInfo {
   text-align: left;
   margin-left: 10rem;
+  font-size: 1.4rem;
+}
+
+.accountInfo fieldset {
+  width: 40rem;
+}
+
+.accountInfo button:hover {
+  background-color: aqua;
+}
+
+.accountInfo input {
+  margin-right: 1.5rem;
 }

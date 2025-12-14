@@ -287,6 +287,13 @@ export function useAppLogic() {
     });
   }
 
+  function changeAccountInfo(name, value) {
+    setAccount((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
+  }
+
   return {
     id,
     auth,
@@ -300,6 +307,7 @@ export function useAppLogic() {
     changeComment,
     users,
     account,
+    changeAccountInfo,
     profiles,
   };
 }

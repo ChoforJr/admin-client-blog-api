@@ -19,6 +19,7 @@ const App = () => {
     changeComment,
     users,
     account,
+    changeAccountInfo,
     profiles,
   } = useAppLogic();
 
@@ -35,6 +36,7 @@ const App = () => {
     changeComment,
     users,
     account,
+    changeAccountInfo,
     profiles,
   };
   return (
