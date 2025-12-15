@@ -312,6 +312,34 @@ export function useAppLogic() {
       return updatedComments;
     });
   }
+  async function deleteComment(event, id) {
+    event.preventDefault();
+    try {
+      const authToken = localStorage.getItem("authorization");
+
+      const response = await fetch(`${apiUrl}/admin/post/comment/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `${authToken}`,
+        },
+      });
+
+      if (response.ok) {
+        setComments((prevComments) => {
+          const updatedComments = prevComments.filter(
+            (comment) => comment.id != id
+          );
+          return updatedComments;
+        });
+      } else {
+        const result = await response.json();
+        console.log(result);
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+    }
+  }
 
   function changeAccountInfo(name, value) {
     setAccount((prevValues) => ({
@@ -332,6 +360,7 @@ export function useAppLogic() {
     comments,
     addComment,
     changeComment,
+    deleteComment,
     users,
     account,
     changeAccountInfo,

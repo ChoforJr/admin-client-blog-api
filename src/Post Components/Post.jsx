@@ -18,6 +18,7 @@ const Post = () => {
     addComment,
     profiles,
     changeComment,
+    deleteComment,
   } = useContext(ItemContext);
 
   const currentPost = posts.filter((post) => post.id == id);
@@ -187,7 +188,12 @@ const Post = () => {
                       </div>
                     )}
                     <div>
-                      <button className={styles.commentDelBtn}>Delete</button>{" "}
+                      <button
+                        className={styles.commentDelBtn}
+                        onClick={(event) => deleteComment(event, comment.id)}
+                      >
+                        Delete
+                      </button>{" "}
                       {account.id == comment.userId && (
                         <button
                           className={styles.commentEdtBtn}
