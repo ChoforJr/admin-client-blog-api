@@ -348,6 +348,33 @@ export function useAppLogic() {
     }));
   }
 
+  async function deleteUser(event, id) {
+    event.preventDefault();
+    try {
+      const authToken = localStorage.getItem("authorization");
+
+      const response = await fetch(`${apiUrl}/admin/user/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `${authToken}`,
+        },
+      });
+
+      if (response.ok) {
+        setUsers((prevUsers) => {
+          const updatedUsers = prevUsers.filter((user) => user.id != id);
+          return updatedUsers;
+        });
+      } else {
+        const result = await response.json();
+        console.log(result);
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+    }
+  }
+
   return {
     id,
     auth,
@@ -365,5 +392,6 @@ export function useAppLogic() {
     account,
     changeAccountInfo,
     profiles,
+    deleteUser,
   };
 }

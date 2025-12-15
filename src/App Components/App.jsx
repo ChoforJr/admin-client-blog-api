@@ -23,6 +23,7 @@ const App = () => {
     account,
     changeAccountInfo,
     profiles,
+    deleteUser,
   } = useAppLogic();
 
   const value = {
@@ -42,6 +43,7 @@ const App = () => {
     account,
     changeAccountInfo,
     profiles,
+    deleteUser,
   };
   return (
     <div className="container">
