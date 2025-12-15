@@ -182,6 +182,7 @@ export function useAppLogic() {
           };
 
           setAccount(neededItems);
+          setAuth(false);
         } catch (error) {
           console.error("Network error:", error);
         }
