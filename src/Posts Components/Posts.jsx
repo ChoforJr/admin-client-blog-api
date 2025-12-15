@@ -5,7 +5,8 @@ import { ItemContext } from "../ItemContext";
 import { useContext } from "react";
 
 const Posts = () => {
-  const { auth, posts, comments, changePostState } = useContext(ItemContext);
+  const { auth, posts, comments, changePostState, deletePost } =
+    useContext(ItemContext);
   const navigate = useNavigate();
   function getPost(event) {
     const { id } = event.currentTarget;
@@ -33,7 +34,7 @@ const Posts = () => {
               <div>
                 <button
                   className={styles.postDelBtn}
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={(event) => deletePost(event, item.id)}
                 >
                   Delete
                 </button>{" "}

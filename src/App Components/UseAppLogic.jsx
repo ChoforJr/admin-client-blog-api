@@ -266,6 +266,32 @@ export function useAppLogic() {
       console.error("Network error:", error);
     }
   }
+  async function deletePost(event, id) {
+    event.stopPropagation();
+    try {
+      const authToken = localStorage.getItem("authorization");
+
+      const response = await fetch(`${apiUrl}/admin/post/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `${authToken}`,
+        },
+      });
+
+      if (response.ok) {
+        setPosts((prevPosts) => {
+          const updatedPosts = prevPosts.filter((post) => post.id != id);
+          return updatedPosts;
+        });
+      } else {
+        const result = await response.json();
+        console.log(result);
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+    }
+  }
 
   function addComment(newComment) {
     setComments((prevComments) => {
@@ -302,6 +328,7 @@ export function useAppLogic() {
     addPost,
     editPost,
     changePostState,
+    deletePost,
     comments,
     addComment,
     changeComment,
