@@ -207,12 +207,18 @@ export function useAppLogic() {
               published: oldPost.published,
               publishedAt: new Date(),
             };
-          } else {
+          } else if (post.published == true && oldPost.published == false) {
             return {
               ...post,
               title: oldPost.title,
               content: oldPost.content,
               published: oldPost.published,
+            };
+          } else {
+            return {
+              ...post,
+              title: oldPost.title,
+              content: oldPost.content,
             };
           }
         }
