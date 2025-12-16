@@ -212,7 +212,8 @@ export function useAppLogic() {
               ...post,
               title: oldPost.title,
               content: oldPost.content,
-              published: oldPost.published,
+              published: false,
+              publishedAt: null,
             };
           } else {
             return {
