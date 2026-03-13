@@ -111,7 +111,7 @@ This is part of a three-part Blog API ecosystem:
 
 ## Author
 
-**Forsakang Chofor Junior**
+**FORSAKANG CHOFOR JUNIOR**
 
 - [GitHub](https://github.com/ChoforJr)
 - [LinkedIn](https://www.linkedin.com/in/choforforsakang/)
