@@ -2,6 +2,13 @@
 
 A comprehensive admin dashboard for managing blog content. Built with React and Vite, this admin client provides full CRUD operations for posts, comments, users, and account management.
 
+## Related Projects
+
+This is part of a three-part Blog API ecosystem:
+
+- 📱 **[Blog API Backend](https://github.com/ChoforJr/blog-api)** - RESTful API server
+- 👥 **[User Client](https://github.com/ChoforJr/user-client-blog-api)** - Public user-facing blog interface
+
 ## Table of Contents
 
 - [Features](#features)
@@ -101,13 +108,6 @@ tests/
 
 public/                      # Static assets
 ```
-
-## Related Projects
-
-This is part of a three-part Blog API ecosystem:
-
-- 📱 **[Blog API Backend](https://github.com/ChoforJr/blog-api)** - RESTful API server
-- 👥 **[User Client](https://github.com/ChoforJr/user-client-blog-api)** - Public user-facing blog interface
 
 ## Author
 
