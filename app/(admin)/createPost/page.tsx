@@ -3,7 +3,8 @@
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
-import { Button, Field, Notice, PageHeading, TextAreaField } from "@/app/components/ui";
+import { Button, Field, Notice, PageHeading } from "@/app/components/ui";
+import { MarkdownEditor } from "@/app/components/MarkdownEditor";
 import { useBlog } from "@/src/lib/blog-context";
 import type { PostInput } from "@/src/lib/types";
 
@@ -50,21 +51,26 @@ export default function CreatePostPage() {
             );
         }}
       >
-        <Field
-          label="Title"
-          value={post.title}
-          onChange={(event) => setPost({ ...post, title: event.target.value })}
-          placeholder="Give your post a title"
-          required
-        />
-        <TextAreaField
-          label="Content"
-          value={post.content}
-          onChange={(event) => setPost({ ...post, content: event.target.value })}
-          placeholder="Write your post here…"
-          required
-          className="[&>textarea]:min-h-72"
-        />
+        <div>
+          <Field
+            label="Title"
+            maxLength={120}
+            minLength={4}
+            value={post.title}
+            onChange={(event) => setPost({ ...post, title: event.target.value })}
+            placeholder="Give your post a title"
+            required
+          />
+          <p className="mt-1 text-right text-xs text-ink/45">{post.title.length}/120</p>
+        </div>
+        <div className="grid gap-2 text-sm font-semibold text-ink">
+          <span>Content</span>
+          <MarkdownEditor
+            value={post.content}
+            onChange={(content) => setPost({ ...post, content })}
+            required
+          />
+        </div>
         <fieldset className="flex flex-wrap gap-4">
           <legend className="mb-2 text-sm font-semibold text-ink">Publication status</legend>
           {[

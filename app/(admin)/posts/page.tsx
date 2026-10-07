@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { Button, ButtonLink, EmptyState, LoadingState, Notice, PageHeading, formatDate } from "@/app/components/ui";
+import { MarkdownContent } from "@/app/components/MarkdownContent";
 import { useBlog } from "@/src/lib/blog-context";
 
 export default function PostsPage() {
@@ -85,9 +86,7 @@ export default function PostsPage() {
                       {post.title}
                     </Link>
                   </h2>
-                  <p className="mt-2 line-clamp-2 whitespace-pre-wrap text-sm leading-6 text-ink/65">
-                    {post.content}
-                  </p>
+                  <MarkdownContent className="mt-2 line-clamp-2 break-words text-sm leading-6 text-ink/65" content={post.content} />
                   <p className="mt-3 text-xs font-medium text-ink/50">
                     {comments.filter((comment) => String(comment.postId) === String(post.id)).length} comments
                     {post.publishedAt && ` · Published ${formatDate(post.publishedAt)}`}

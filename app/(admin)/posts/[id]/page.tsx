@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { Button, EmptyState, Field, LoadingState, Notice, PageHeading, formatDate } from "@/app/components/ui";
+import { MarkdownContent } from "@/app/components/MarkdownContent";
 import { useBlog } from "@/src/lib/blog-context";
 import { usePostWebSocket } from "@/src/hooks/usePostWebSocket";
 import type { Comment, RealtimeEvent } from "@/src/lib/types";
@@ -127,9 +128,10 @@ export default function PostDetailPage() {
         <h1 className="mt-5 break-words text-3xl font-bold leading-tight sm:text-5xl">{post.title}</h1>
         <p className="mt-4 text-sm text-white/70">Created {formatDate(post.createdAt)}</p>
       </header>
-      <div className="mt-6 whitespace-pre-wrap break-words rounded-2xl border border-forest/10 bg-white p-5 text-base leading-8 text-ink/80 sm:p-8">
-        {post.content}
-      </div>
+      <MarkdownContent
+        className="mt-6 break-words rounded-2xl border border-forest/10 bg-white p-5 text-base leading-8 text-ink/80 sm:p-8"
+        content={post.content}
+      />
 
       <section className="mt-10">
         <div className="mb-5">

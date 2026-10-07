@@ -5,6 +5,7 @@ const apiUrl = (
 export interface ApiErrorPayload {
   message?: string;
   error?: string | { message?: string };
+  errors?: Array<{ msg?: string; message?: string; path?: string; param?: string }>;
 }
 
 export class ApiRequestError extends Error {
@@ -35,6 +36,12 @@ export function getApiError(payload: unknown, fallback: string): string {
     if (typeof data.error === "string") return data.error;
     if (data.error && typeof data.error.message === "string") {
       return data.error.message;
+    }
+    if (data.errors?.length) {
+      return data.errors
+        .map((error) => error.msg || error.message)
+        .filter((message): message is string => Boolean(message))
+        .join(". ");
     }
   }
   return fallback;
